@@ -7,18 +7,20 @@ class arduinoCommunication:
 
     # Init our object
     def __init__(self, portNum):
-        self.serialPort = serial.Serial(port = "COM" + str(portNum), baudrate = 9600)
+        self.serialPort = serial.Serial(port = "COM" + str(portNum), baudrate = 9600, timeout = 2)
         self.serialPort.flush()
 
     # Write the given message into the port
     def writeMessage(self, message):
         if not self.serialPort: raise Exception("Serial port object not initialized!")
+        print("Writing: ", message)
         self.serialPort.write(bytes(message, "utf-8"))
 
     # Read the port, and if there is a message from the arduino, return the message
     def readMessage(self):
         message = self.serialPort.readline()
         message = message.decode("utf-8")
+        print("Reading: ", message)
         if not message.find("ToComputer:") == -1:
             return (True, message[11:])
         return (False, message)

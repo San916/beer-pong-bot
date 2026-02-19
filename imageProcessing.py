@@ -10,7 +10,7 @@ GRAYYSCALE_VARIANCE_THRESHOLD = 13.0
 GRAYSCALE_THRESHOLD = 120
 
 # Given an image, detect the cups in the image and return the detected cups in the form of a list of rectangles
-def detectCups(originalImage, drawImage = False):
+def detectCups(originalImage, returnImage = False):
     # ---------------------------------------
     # Preprocessing
     # ---------------------------------------
@@ -77,7 +77,7 @@ def detectCups(originalImage, drawImage = False):
     # ---------------------------------------
     
     detectedCups = lookForCups(redContours, whiteContours)
-    if not drawImage: return detectedCups
+    if not returnImage: return detectedCups
     originalImage = drawCups(originalImage, detectedCups)
     return (detectedCups, originalImage)
 
@@ -213,9 +213,9 @@ def cameraSetup(url):
         print(e.message)
 
 # Gets a snapshot of the VideoCapture feed and runs cup detection once on that image
-def runCupDetection(cap, drawImage = False):
+def runCupDetection(cap, width, height, returnImage = False):
     ret, frame = cap.read()
     if not ret:
         raise Exception("VideoCapture object couldnt get an image!")
-    frame = cv2.resize(frame, (640, 480)) 
-    return detectCups(frame, drawImage)
+    frame = cv2.resize(frame, (width, height)) 
+    return detectCups(frame, returnImage)
